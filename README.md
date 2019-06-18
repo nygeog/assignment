@@ -6,6 +6,7 @@ Using Python 3.7
     pip install pandas
     pip install matplotlib
     pip install -U scikit-learn
+    pip install jupyter notebook
 
 
 # Part 1 Data Exploration and Evaluation
