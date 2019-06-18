@@ -175,9 +175,11 @@ def annualized_rate_of_return(df):
     rate_return_top = rate_return_sort.head(10)
     rate_return_bot = rate_return_sort.tail(10)
 
+    print('Top 10 Annualized Rate Return by Year-Grade')
     rate_return_top.plot.bar(rot=0)
     plt.savefig('img/rate_return_top.png')
 
+    print('Bottom 10 Annualized Rate Return by Year-Grade')
     rate_return_bot.plot.bar(rot=0)
     plt.savefig('img/rate_return_bot.png')
 
