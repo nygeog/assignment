@@ -217,6 +217,9 @@ def get_defaults(df):
 
     defaults_count_top_20.plot.bar(rot=0)
     plt.title('Top 20 Percent Defaults by Year and Grade Category')
+    plt.xlabel('Year-Grade Categories')
+    L = plt.legend()
+    L.get_texts()[0].set_text('Percent Default')
     plt.savefig('img/top_20_default_categories.png')
 
 
@@ -244,13 +247,21 @@ def annualized_rate_of_return(df):
     rate_return_top = rate_return_sort.head(10)
     rate_return_bot = rate_return_sort.tail(10)
 
-    print('Top 10 Annualized Rate Return by Year-Grade')
     rate_return_top.plot.bar(rot=0)
+    L = plt.legend()
+    L.get_texts()[0].set_text('Annualized Rate Return')
+    plt.title('Top 10 Annualized Rate Return by Year-Grade')
+    plt.xlabel('Year-Grade Categories')
     plt.savefig('img/rate_return_top.png')
 
-    print('Bottom 10 Annualized Rate Return by Year-Grade')
     rate_return_bot.plot.bar(rot=0)
+    L = plt.legend()
+    L.get_texts()[0].set_text('Annualized Rate Return')
+    plt.title('Bottom 10 Annualized Rate Return by Year-Grade')
+    plt.xlabel('Year-Grade Categories')
     plt.savefig('img/rate_return_bot.png')
+
+    return rate_return_sort
 
 
 def logistic_regression(df):
