@@ -19,6 +19,22 @@ def run_assignment(config):
         )
 
         df['issue_date'] = pd.to_datetime(df['issue_d'])
+        df['issue_year'] = df['issue_date'].dt.year
+        df['max_date'] = pd.to_datetime(df.issue_date.max())
+        df['months'] = (
+                (df.max_date - df.issue_date) / np.timedelta64(1, 'M')
+        ).astype(int)
+
+        df['year_grade'] = df.issue_year.apply(str) + '-' + df.grade
+        df['default'] = np.where(
+            df['loan_status'] == 'Fully Paid',
+            0,
+            1,
+        )
+
+        df['annual_rate_return'] = (
+            np.power(df['total_pymnt'] / df['funded_amnt'], 1/3) - 1.0
+        )
 
         df.to_csv('data/processing/data.csv', index=False)
 
@@ -44,12 +60,19 @@ def run_assignment(config):
             parse_dates=['issue_date']
         )
 
-        df['max_date'] = pd.to_datetime(df.issue_date.max())
-        df['months'] = (
-                (df.max_date - df.issue_date) / np.timedelta64(1, 'M')
-        ).astype(int)
+        dfs = df[~(df.months < 36)].copy()
 
-        dfs = df[~(df.months < 36)]
+        fully_paid_count = dfs.groupby(
+            ['loan_status']
+        ).term.count()['Fully Paid']
+
+        pct_total_fully_paid = fully_paid_count / (len(dfs.index))
+
+        print(
+            '{} pct. of loans Fully Paid excluding < 36 months'.format(
+                pct_total_fully_paid
+            )
+        )
 
     # Part 2 Business Analysis
     #   Assume a 36 month investment period for each loan, and
