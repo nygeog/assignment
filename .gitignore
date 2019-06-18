@@ -1,0 +1,14 @@
+venv/
+.idea/
+data/input
+data/processing
+.idea/assignment.iml
+.idea/libraries/R_User_Library.xml
+.idea/modules.xml
+.idea/vcs.xml
+*.pyc
+*.iml
+*.xml
+*.xml
+*.xml
+*.xml
