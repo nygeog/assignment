@@ -1,7 +1,11 @@
 from tools.helpers import read_json, pandas_keep_columns, retrieve_data
 from tools.helpers import create_project_workspace
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_curve
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -182,32 +186,63 @@ def run_assignment(config):
 
         df = df.drop(
             [
-                'issue_date',
-                'z_score_annual_inc',
-                'z_score_revol_bal',
-                'z_score_dti',
-                'year_grade',
-                'loan_status',
-                'max_date',
-                'issue_d',
+                'issue_date',  # parsed out to month and year
+                'z_score_annual_inc',  # removing these, for filtering part 1
+                'z_score_revol_bal',  # removing these, for filtering part 1
+                'z_score_dti',  # removing these, for filtering part 1
+                'year_grade',  # year and grade are also own columns
+                'loan_status',  # this is dummy in 'default' col
+                'max_date',  # removing, for filtering in part 2
+                'issue_d',  # original date field, removed sim. to 'issue_date'
             ],
             axis=1,
         )
 
         one_hot = pd.get_dummies(df)
 
-        print(one_hot.head(15))
-
         x = one_hot.drop('default', axis=1)
         y = df[['default']]
 
         # x.to_csv('data/processing/data_filtered_train.csv')
 
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y.values.ravel(),
+            test_size=0.3,
+            random_state=0,
+        )
         model = LogisticRegression(solver='lbfgs', max_iter=500)
-        model.fit(x, y.values.ravel())
-        predicted_classes = model.predict(x)
+        model.fit(x_train, y_train)
 
-        accuracy = accuracy_score(y.values.ravel(), predicted_classes)
-        parameters = model.coef_
-        print(accuracy)
-        print(parameters)
+        y_pred = model.predict(x_test)
+
+        print(
+            'Accuracy of logistic regression classifier on test: {:.2f}'.format(
+                model.score(x_test, y_test)
+            )
+        )
+
+        confusion_matrix_plot = confusion_matrix(y_test, y_pred)
+        print(confusion_matrix_plot)
+
+        print(classification_report(y_test, y_pred))
+
+        logit_roc_auc = roc_auc_score(y_test, model.predict(x_test))
+        fpr, tpr, thresholds = roc_curve(
+            y_test,
+            model.predict_proba(x_test)[:, 1],
+        )
+        plt.figure()
+        plt.plot(
+            fpr,
+            tpr,
+            label='Logistic Regression (area = %0.2f)' % logit_roc_auc,
+        )
+        plt.plot([0, 1], [0, 1], 'r--')
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('Receiver operating characteristic')
+        plt.legend(loc="lower right")
+        plt.savefig('img/log_roc_split.png')
+        # plt.show()
