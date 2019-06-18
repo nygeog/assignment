@@ -99,7 +99,7 @@ def run_assignment(config):
 
         print(
             '    {:.2f} pct. of loans Fully Paid excluding < 36 months'.format(
-                pct_total_fully_paid
+                pct_total_fully_paid * 100
             )
         )
 
