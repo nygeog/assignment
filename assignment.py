@@ -144,6 +144,8 @@ def select_historic_data(df):
 
     defaults_count_top_20 = defaults_count.head(20)
 
+    plt.rcParams['figure.figsize'] = [15, 5]
+
     defaults_count_top_20.plot.bar(rot=0)
 
     plt.savefig('img/top_20_default_categories.png')
@@ -230,6 +232,8 @@ def logistic_regression(df):
         y_test,
         model.predict_proba(x_test)[:, 1],
     )
+
+    plt.rcParams['figure.figsize'] = [10, 5]
     plt.figure()
     plt.plot(
         fpr,
