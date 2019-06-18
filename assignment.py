@@ -1,4 +1,5 @@
-from tools.helpers import read_json, pandas_keep_columns
+from tools.helpers import read_json, pandas_keep_columns, retrieve_data
+from tools.helpers import create_project_workspace
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import pandas as pd
@@ -13,14 +14,20 @@ def run_assignment(config):
 
     steps = data['steps']
 
-    if "parse-data" in steps:
+    if "setup-workspace-retrieve-and-parse-data" in steps:
+        create_project_workspace()
+
+        unzip_folder = retrieve_data(data["download_link"])
+
         df = pandas_keep_columns(
             pd.read_csv(
-                data['input_data'],
+                '{}/{}'.format(unzip_folder, data['input_data_file_name']),
                 low_memory=False,
             ),
             data['keep_columns'],
         )
+
+        print('    creating value added fields for data.')
 
         df['issue_date'] = pd.to_datetime(df['issue_d'])
         df['issue_year'] = df['issue_date'].dt.year
@@ -45,6 +52,8 @@ def run_assignment(config):
 
         df.to_csv('data/processing/data.csv', index=False)
 
+        print('    filtering fields for data.')
+
         for col in ['annual_inc', 'revol_bal', 'dti']:
             col_mean = df[col].mean()
             col_std = df[col].std()
@@ -63,7 +72,7 @@ def run_assignment(config):
                         'z_score_{}'.format(col)
                     ] > -3
                 )
-            ].copy()
+            ].copy()  # filter data for spec. cols, z-score'd
 
         df.to_csv('data/processing/data_filtered.csv', index=False)
 
@@ -197,7 +206,7 @@ def run_assignment(config):
         model = LogisticRegression(solver='lbfgs', max_iter=500)
         model.fit(x, y.values.ravel())
         predicted_classes = model.predict(x)
-        #accuracy = accuracy_score(y.flatten(), predicted_classes)
+
         accuracy = accuracy_score(y.values.ravel(), predicted_classes)
         parameters = model.coef_
         print(accuracy)
