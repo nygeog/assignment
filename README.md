@@ -11,8 +11,8 @@ Using Python 3.7
 
 # Part 1 Data Exploration and Evaluation
 - [x] Clean columns, carry forward
-      
-        [‘loan_amnt’, ‘funded_amnt’, ‘term’, ‘int_rate’, ‘grade’, ‘annual_inc’, ‘issue_d’, ‘dti’, ‘revol_bal’, ‘total_pymnt’, ‘loan_status’]
+
+        ['loan_amnt’, 'funded_amnt’, 'term’, 'int_rate’, 'grade’, 'annual_inc’, 'issue_d’, 'dti’, 'revol_bal’, 'total_pymnt’, 'loan_status’]
       
 - [ ] Perform any necessary cleaning and aggregations to explore and better
   understand the dataset.
