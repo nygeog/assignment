@@ -49,6 +49,7 @@ def unzip_file(source_path, source_filename, dest_path, dest_folder_name):
 
 def create_project_workspace():
     for i in [
+        'img',
         'data/input',
         'data/processing',
         'data/output',

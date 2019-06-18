@@ -246,3 +246,4 @@ def run_assignment(config):
         plt.legend(loc="lower right")
         plt.savefig('img/log_roc_split.png')
         # plt.show()
+ 
