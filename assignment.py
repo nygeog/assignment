@@ -1,4 +1,6 @@
 from tools.helpers import read_json, pandas_keep_columns
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,6 +24,7 @@ def run_assignment(config):
 
         df['issue_date'] = pd.to_datetime(df['issue_d'])
         df['issue_year'] = df['issue_date'].dt.year
+        df['issue_month'] = df['issue_date'].dt.month
         df['max_date'] = pd.to_datetime(df.issue_date.max())
         df['months'] = (
             (df.max_date - df.issue_date) / np.timedelta64(1, 'M')
@@ -47,7 +50,7 @@ def run_assignment(config):
             col_std = df[col].std()
 
             df['z_score_{}'.format(col)] = df[col].apply(
-                lambda x: (x - col_mean) / col_std
+                lambda v: (v - col_mean) / col_std
             )
 
             df = df[
@@ -161,3 +164,41 @@ def run_assignment(config):
 
         rate_return_bot.plot.bar(rot=0)
         plt.savefig('img/rate_return_bot.png')
+
+    if 'logistic-regression' in steps:
+        df = pd.read_csv(
+            'data/processing/data_filtered.csv',
+            low_memory=False,
+        )
+
+        df = df.drop(
+            [
+                'issue_date',
+                'z_score_annual_inc',
+                'z_score_revol_bal',
+                'z_score_dti',
+                'year_grade',
+                'loan_status',
+                'max_date',
+                'issue_d',
+            ],
+            axis=1,
+        )
+
+        one_hot = pd.get_dummies(df)
+
+        print(one_hot.head(15))
+
+        x = one_hot.drop('default', axis=1)
+        y = df[['default']]
+
+        # x.to_csv('data/processing/data_filtered_train.csv')
+
+        model = LogisticRegression(solver='lbfgs', max_iter=500)
+        model.fit(x, y.values.ravel())
+        predicted_classes = model.predict(x)
+        #accuracy = accuracy_score(y.flatten(), predicted_classes)
+        accuracy = accuracy_score(y.values.ravel(), predicted_classes)
+        parameters = model.coef_
+        print(accuracy)
+        print(parameters)
