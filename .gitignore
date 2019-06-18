@@ -3,3 +3,5 @@ data/input
 data/processing
 *.pyc
 .DS_Store
+*.xml
+.idea/workspace.xml
