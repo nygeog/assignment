@@ -13,3 +13,44 @@ Fields to use.
 * revol_bal - Total credit revolving balanceTotal credit revolving balance
 * total_pymnt - Payments received to date for total amount funded
 * loan_status - Current status of the loan
+
+# Part 1 Data Exploration and Evaluation
+  clean columns, carry forward
+      ‘loan_amnt’, ‘funded_amnt’, ‘term’, ‘int_rate’, ‘grade’,
+      ‘annual_inc’, ‘issue_d’, ‘dti’, ‘revol_bal’, ‘total_pymnt’,
+      ‘loan_status’
+  perform any necessary cleaning and aggregations to explore and better
+  understand the dataset.
+
+  Describe any assumptions you made to handle null variables and outliers.
+
+  Describe the distributions of the features.
+
+  Include two data visualizations and two summary statistics to support
+  these findings.
+  
+#     Part 2 Business Analysis
+  Assume a 36 month investment period for each loan, and
+  exclude loans with less than 36 months of data available.
+1) What percentage of loans has been fully paid?
+2) When bucketed by year of origination and grade, which cohort has the
+      highest rate of defaults? Here you may assume that any loan which
+      was not fully paid had “defaulted”.
+3) When bucketed by year of origination and grade, what annualized rate of
+      return have these loans generated on average?
+
+      For simplicity, use the following approximation:
+      Annualized rate of return = (total_pymnt / funded_amnt) ^ (1/3) - 1
+
+
+# Part 3 Modeling
+    build a logistic regression model to predict loan defaults
+    Assume that
+      (i) you are given the ability to invest in each loan independently
+      (ii) you invest immediately following loan origination and hold to
+          maturity (36 months)
+      (iii) all loan fields that would be known upon origination are made
+          available to you.
+
+    Was the model effective? Explain how you validated your model and describe
+    how you measure the performance of the model.
