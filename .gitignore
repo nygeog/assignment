@@ -2,7 +2,4 @@ venv/
 data/input
 data/processing
 *.pyc
-*.iml
-*.xml
 .DS_Store
-.ipynb_checkpoints/
