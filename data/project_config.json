@@ -14,5 +14,5 @@
     "total_pymnt",
     "loan_status"
   ],
-  "steps": "select-historic-data"
+  "steps": "annualized-rate-of-return"
 }
