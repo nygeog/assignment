@@ -6,16 +6,21 @@
       <w>dataset</w>
       <w>dest</w>
       <w>dtype</w>
+      <w>exponweib</w>
       <w>figsize</w>
+      <w>genextreme</w>
       <w>googleapis</w>
       <w>ipynb</w>
       <w>kaggle</w>
+      <w>kolmogorov</w>
       <w>lbfgs</w>
       <w>logit</w>
       <w>pred</w>
       <w>pymnt</w>
       <w>revol</w>
+      <w>smirnov</w>
       <w>venv</w>
+      <w>weibull</w>
     </words>
   </dictionary>
 </component>

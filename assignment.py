@@ -9,6 +9,7 @@ from sklearn.metrics import roc_curve
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.stats as st
 plt.rcParams['figure.figsize'] = [15, 5]
 
 
@@ -17,13 +18,14 @@ def run_assignment(config):
     steps = data['steps']
 
     if "run" in steps:
-        df = setup_workspace_retrieve_and_parse_data(data)
+        df = setup_workspace_retrieve_data(data)
+        df = clean_data(df)
         select_historic_data(df)
         annualized_rate_of_return(df)
         logistic_regression(df)
 
 
-def setup_workspace_retrieve_and_parse_data(data):
+def setup_workspace_retrieve_data(data):
     create_project_workspace()
 
     unzip_folder = retrieve_data(data["download_link"])
@@ -36,7 +38,57 @@ def setup_workspace_retrieve_and_parse_data(data):
         data['keep_columns'],
     )
 
-    print('    creating value added fields for data.')
+    return df
+
+
+def get_best_distribution(data):
+    dist_names = [
+        "norm",
+        "exponweib",
+        "weibull_max",
+        "weibull_min",
+        "pareto",
+        "genextreme",
+    ]
+    dist_results = []
+    params = {}
+    for dist_name in dist_names:
+        dist = getattr(st, dist_name)
+        param = dist.fit(data)
+
+        params[dist_name] = param
+        # Applying the Kolmogorov-Smirnov test
+        d, p = st.kstest(data, dist_name, args=param)
+        print("p value for " + dist_name + " = " + str(p))
+        dist_results.append((dist_name, p))
+
+    # select the best fitted distribution
+    best_dist, best_p = (max(dist_results, key=lambda item: item[1]))
+    # store the name of the best fit and its p value
+
+    print("Best fitting distribution: " + str(best_dist))
+    print("Best p value: " + str(best_p))
+    print("Parameters for the best fit: " + str(params[best_dist]))
+
+    # https://stackoverflow.com/questions/37487830/how-to-find-probability-
+    # distribution-and-parameters-for-real-data-python-3
+    return best_dist, best_p, params[best_dist]
+
+
+def plot_hist_for_numeric_col(df, cols_list, file_name_prefix):
+
+    plt.rcParams['figure.figsize'] = [15, 5]
+
+    for col in cols_list:
+        if (df[col].dtype == int) | (df[col].dtype == float):
+            fig, ax = plt.subplots()
+            df.hist(col, ax=ax)
+            plt.title('{}'.format(col.replace('_', ' ').upper()))
+            fig.savefig('img/{}_{}.png'.format(file_name_prefix, col))
+
+
+def clean_data(df):
+    print('    creating value-added fields for data.')
 
     df['issue_date'] = pd.to_datetime(df['issue_d'])
     df['issue_year'] = df['issue_date'].dt.year
@@ -59,11 +111,11 @@ def setup_workspace_retrieve_and_parse_data(data):
 
     len_pre_filter = len(df.index)
 
-    df.to_csv('data/processing/data.csv', index=False)
+    # df.to_csv('data/processing/data.csv', index=False)
 
     print('    filtering fields for data.')
 
-    for col in ['annual_inc', 'revol_bal', 'dti']:
+    for col in ['annual_inc', 'revol_bal', 'dti']:  # df.columns:  #
         col_mean = df[col].mean()
         col_std = df[col].std()
 
@@ -73,13 +125,9 @@ def setup_workspace_retrieve_and_parse_data(data):
 
         df = df[
             (
-                df[
-                    'z_score_{}'.format(col)
-                ] < 3
+                df['z_score_{}'.format(col)] < 3
             ) & (
-                df[
-                    'z_score_{}'.format(col)
-                ] > -3
+                df['z_score_{}'.format(col)] > -3
             )
         ].copy()  # filter data for spec. cols, z-score'd
 
@@ -106,19 +154,40 @@ def select_historic_data(df):
 
     pct_total_fully_paid = fully_paid_count / (len(dfs.index))
 
-    print(
-        '    {:.2f}% of loans Fully Paid excluding < 36 months'.format(
-            pct_total_fully_paid * 100
-        )
+    return dfs, pct_total_fully_paid
+
+
+def pie_chart(vars_list, vars_name_list, colors_list, plot_title):
+    sizes = vars_list
+    labels = vars_name_list
+    colors = colors_list
+
+    fig1, ax1 = plt.subplots()
+    ax1.pie(
+        sizes,
+        colors=colors,
+        labels=labels,
+        autopct='%1.1f%%',
+        startangle=90,
     )
 
-    dfs['count'] = 1
+    centre_circle = plt.Circle((0, 0), 0.70, fc='white')
+    fig = plt.gcf()
+    fig.gca().add_artist(centre_circle)
+    ax1.axis('equal')
+    plt.tight_layout()
+    plt.title(plot_title)
+    plt.show()
 
-    year_grade_default = dfs.groupby(
+
+def get_defaults(df):
+    df['count'] = 1
+
+    year_grade_default = df.groupby(
         ['year_grade', 'default'],
     ).agg({'count': 'sum'})
 
-    year_grade = dfs.groupby(['year_grade']).agg({'count': 'sum'})
+    year_grade = df.groupby(['year_grade']).agg({'count': 'sum'})
 
     grouped_year_defaults = year_grade_default.div(
         year_grade,
@@ -147,7 +216,7 @@ def select_historic_data(df):
     plt.rcParams['figure.figsize'] = [15, 5]
 
     defaults_count_top_20.plot.bar(rot=0)
-
+    plt.title('Top 20 Percent Defaults by Year and Grade Category')
     plt.savefig('img/top_20_default_categories.png')
 
 
