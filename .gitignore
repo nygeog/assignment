@@ -13,3 +13,4 @@ data/processing
 *.xml
 *.xml
 .idea/assignment.iml
+.DS_Store
