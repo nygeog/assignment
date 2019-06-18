@@ -1,5 +1,6 @@
 {
-  "input_data": "data/input/loan.csv",
+  "download_link": "https://www.dropbox.com/s/pythkm1pk2aia75/lending-club-loan-data.zip?dl=1",
+  "input_data_file_name": "loan.csv",
   "keep_columns": [
     "loan_amnt", 
     "funded_amnt", 
@@ -13,5 +14,5 @@
     "total_pymnt",
     "loan_status"
   ],
-  "steps": "logistic-regression"
+  "steps": "setup-workspace-retrieve-and-parse-data"
 }
