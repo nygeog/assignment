@@ -85,7 +85,7 @@ def run_assignment(config):
             'post-filter length: {}'.format(len(df.index)),
             'dif. of: {}'.format(len_pre_filter - len(df.index)),
             'dif. of: {:.2f}%'.format(
-                (len_pre_filter - len(df.index)/len_pre_filter) * 100,
+                ((len_pre_filter - len(df.index))/len_pre_filter) * 100,
             ),
         )
 
