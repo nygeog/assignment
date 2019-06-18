@@ -14,5 +14,5 @@
     "total_pymnt",
     "loan_status"
   ],
-  "steps": "setup-workspace-retrieve-and-parse-data,select-historic-data,annualized-rate-of-return,logistic-regression"
+  "steps": "select-historic-data,annualized-rate-of-return,logistic-regression"
 }
