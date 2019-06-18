@@ -264,8 +264,8 @@ def annualized_rate_of_return(df):
     return rate_return_sort
 
 
-def logistic_regression(df):
-    df = df.drop(
+def clean_prior_to_regression(df):
+    return df.drop(
         [
             'issue_date',  # parsed out to month and year
             'z_score_annual_inc',  # removing these, for filtering part 1
@@ -279,6 +279,8 @@ def logistic_regression(df):
         axis=1,
     )
 
+
+def logistic_regression(df):
     one_hot = pd.get_dummies(df)
 
     x = one_hot.drop('default', axis=1)
