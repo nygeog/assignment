@@ -14,5 +14,5 @@
     "total_pymnt",
     "loan_status"
   ],
-  "steps": "setup-workspace-retrieve-and-parse-data"
+  "steps": "select-historic-data"
 }

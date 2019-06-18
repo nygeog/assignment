@@ -77,7 +77,7 @@ def run_assignment(config):
         df.to_csv('data/processing/data_filtered.csv', index=False)
 
         print(
-            'pre-filter length: {}'.format(len_pre_filter),
+            '    pre-filter length: {}'.format(len_pre_filter),
             'post-filter length: {}'.format(len(df.index)),
             'dif. of: {}'.format(len_pre_filter - len(df.index)),
         )
@@ -98,7 +98,7 @@ def run_assignment(config):
         pct_total_fully_paid = fully_paid_count / (len(dfs.index))
 
         print(
-            '{} pct. of loans Fully Paid excluding < 36 months'.format(
+            '    {:.2f} pct. of loans Fully Paid excluding < 36 months'.format(
                 pct_total_fully_paid
             )
         )
