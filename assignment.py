@@ -84,6 +84,9 @@ def run_assignment(config):
             '    pre-filter length: {}'.format(len_pre_filter),
             'post-filter length: {}'.format(len(df.index)),
             'dif. of: {}'.format(len_pre_filter - len(df.index)),
+            'dif. of: {:.2f}%'.format(
+                (len_pre_filter - len(df.index)/len_pre_filter) * 100,
+            ),
         )
 
     if "select-historic-data" in steps:
@@ -152,6 +155,7 @@ def run_assignment(config):
 
         dfs = df[~(df.months < 36)].copy()
 
+        print('    creating annualized rate of return.')
         rate_return = dfs.groupby(
             ['year_grade'],
             as_index=False,
@@ -248,4 +252,3 @@ def run_assignment(config):
         plt.legend(loc="lower right")
         plt.savefig('img/log_roc_split.png')
         # plt.show()
- 
