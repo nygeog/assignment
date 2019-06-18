@@ -129,7 +129,7 @@ def run_assignment(config):
             ascending=[False, False],
         )
 
-        defaults_sort.to_csv('data/processing/defaults_sort.csv', index=False)
+        defaults_sort.to_csv('data/processing/defaults_sort.csv')
 
         defaults_count = defaults_sort[['count']]
 
