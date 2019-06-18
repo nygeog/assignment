@@ -6,9 +6,6 @@ Using Python 3.7
     pip install pandas
     pip install matplotlib
     pip install -U scikit-learn
-     
-
-
 
 
 # Part 1 Data Exploration and Evaluation
