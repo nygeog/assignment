@@ -216,14 +216,16 @@ def run_assignment(config):
         y_pred = model.predict(x_test)
 
         print(
-            'Accuracy of logistic regression classifier on test: {:.2f}'.format(
-                model.score(x_test, y_test)
+            '    Accuracy of logistic regression on test: {:.2f}%'.format(
+                model.score(x_test, y_test) * 100
             )
         )
 
         confusion_matrix_plot = confusion_matrix(y_test, y_pred)
+        print('    Confusion Matrix Plot')
         print(confusion_matrix_plot)
 
+        print('    Classification Report')
         print(classification_report(y_test, y_pred))
 
         logit_roc_auc = roc_auc_score(y_test, model.predict(x_test))
@@ -235,7 +237,7 @@ def run_assignment(config):
         plt.plot(
             fpr,
             tpr,
-            label='Logistic Regression (area = %0.2f)' % logit_roc_auc,
+            label='Logistic Regression (area = {:.2f})'.format(logit_roc_auc),
         )
         plt.plot([0, 1], [0, 1], 'r--')
         plt.xlim([0.0, 1.0])
