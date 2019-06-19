@@ -14,5 +14,5 @@
     "total_pymnt",
     "loan_status"
   ],
-  "steps": ""
+  "steps": "run-all"
 }

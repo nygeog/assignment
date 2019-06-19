@@ -17,12 +17,38 @@ def run_assignment(config):
     data = read_json(config)
     steps = data['steps']
 
-    if "run" in steps:
+    plt.style.use('ggplot')
+
+    if "run-all" in steps:
         df = setup_workspace_retrieve_data(data)
-        df = clean_data(df)
-        select_historic_data(df)
-        annualized_rate_of_return(df)
-        logistic_regression(df)
+        plot_hist_for_numeric_col(df, df.columns, '01_before_filter')
+        dfc = clean_data(df)
+
+        plot_hist_for_numeric_col(
+            dfc,
+            ['annual_inc', 'dti', 'revol_bal'],
+            '02_post_filter',
+        )
+
+        dfs, pct_filtered_fully_paid = select_historic_data(dfc)
+        print('{:.2f}% of loans Fully Paid excluding < 36 months'.format(
+            pct_filtered_fully_paid * 100)
+        )
+
+        get_defaults(dfs)
+
+        annualized_rate_of_return(dfs)
+
+        model_sc, conf_matrix_plot, class_report_data = logistic_regression(
+            clean_prior_to_regression(dfc)
+        )
+        print(
+            'Accuracy of logistic regression on test: {:.2f}%'.format(
+                model_sc * 100
+            )
+        )
+        print(conf_matrix_plot)
+        print(class_report_data)
 
 
 def setup_workspace_retrieve_data(data):
@@ -248,14 +274,14 @@ def annualized_rate_of_return(df):
     rate_return_bot = rate_return_sort.tail(10)
 
     rate_return_top.plot.bar(rot=0)
-    leg =  plt.legend()
+    leg = plt.legend()
     leg.get_texts()[0].set_text('Annualized Rate Return')
     plt.title('Top 10 Annualized Rate Return by Year-Grade')
     plt.xlabel('Year-Grade Categories')
     plt.savefig('img/rate_return_top.png')
 
     rate_return_bot.plot.bar(rot=0)
-    leg =  plt.legend()
+    leg = plt.legend()
     leg.get_texts()[0].set_text('Annualized Rate Return')
     plt.title('Bottom 10 Annualized Rate Return by Year-Grade')
     plt.xlabel('Year-Grade Categories')
@@ -293,7 +319,7 @@ def logistic_regression(df):
         test_size=0.3,
         random_state=0,
     )
-    model =  LogisticRegression(solver='lbfgs', max_iter=500)
+    model = LogisticRegression(solver='lbfgs', max_iter=500)
     model.fit(x_train, y_train)
 
     y_pred = model.predict(x_test)
@@ -330,4 +356,3 @@ def logistic_regression(df):
     # https://towardsdatascience.com/building-a-logistic-regression-in-python-
     # step-by-step-becd4d56c9c8
     return model_score, confusion_matrix_plot, classification_report_data
-    
