@@ -218,8 +218,8 @@ def get_defaults(df):
     defaults_count_top_20.plot.bar(rot=0)
     plt.title('Top 20 Percent Defaults by Year and Grade Category')
     plt.xlabel('Year-Grade Categories')
-    L = plt.legend()
-    L.get_texts()[0].set_text('Percent Default')
+    leg = plt.legend()
+    leg.get_texts()[0].set_text('Percent Default')
     plt.savefig('img/top_20_default_categories.png')
 
 
@@ -248,15 +248,15 @@ def annualized_rate_of_return(df):
     rate_return_bot = rate_return_sort.tail(10)
 
     rate_return_top.plot.bar(rot=0)
-    L = plt.legend()
-    L.get_texts()[0].set_text('Annualized Rate Return')
+    leg =  plt.legend()
+    leg.get_texts()[0].set_text('Annualized Rate Return')
     plt.title('Top 10 Annualized Rate Return by Year-Grade')
     plt.xlabel('Year-Grade Categories')
     plt.savefig('img/rate_return_top.png')
 
     rate_return_bot.plot.bar(rot=0)
-    L = plt.legend()
-    L.get_texts()[0].set_text('Annualized Rate Return')
+    leg =  plt.legend()
+    leg.get_texts()[0].set_text('Annualized Rate Return')
     plt.title('Bottom 10 Annualized Rate Return by Year-Grade')
     plt.xlabel('Year-Grade Categories')
     plt.savefig('img/rate_return_bot.png')
@@ -293,23 +293,16 @@ def logistic_regression(df):
         test_size=0.3,
         random_state=0,
     )
-    model = LogisticRegression(solver='lbfgs', max_iter=500)
+    model =  LogisticRegression(solver='lbfgs', max_iter=500)
     model.fit(x_train, y_train)
 
     y_pred = model.predict(x_test)
 
-    print(
-        '    Accuracy of logistic regression on test: {:.2f}%'.format(
-            model.score(x_test, y_test) * 100
-        )
-    )
+    model_score = model.score(x_test, y_test)
 
     confusion_matrix_plot = confusion_matrix(y_test, y_pred)
-    print('    Confusion Matrix Plot')
-    print(confusion_matrix_plot)
 
-    print('    Classification Report')
-    print(classification_report(y_test, y_pred))
+    classification_report_data = classification_report(y_test, y_pred)
 
     logit_roc_auc = roc_auc_score(y_test, model.predict(x_test))
     fpr, tpr, thresholds = roc_curve(
@@ -333,3 +326,8 @@ def logistic_regression(df):
     plt.legend(loc="lower right")
     plt.savefig('img/log_roc_split.png')
     # plt.show()
+    
+    # https://towardsdatascience.com/building-a-logistic-regression-in-python-
+    # step-by-step-becd4d56c9c8
+    return model_score, confusion_matrix_plot, classification_report_data
+    
