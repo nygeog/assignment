@@ -319,7 +319,7 @@ def logistic_regression(df):
         test_size=0.3,
         random_state=0,
     )
-    model = LogisticRegression(solver='lbfgs', max_iter=500)
+    model = LogisticRegression(solver='lbfgs', max_iter=800)
     model.fit(x_train, y_train)
 
     y_pred = model.predict(x_test)

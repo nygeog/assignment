@@ -10,7 +10,7 @@ Using Python 3.7
 
 
 # Part 1 Data Exploration and Evaluation
-- [x] Clean columns, carry forward
+- [ ] Clean columns, carry forward
 
         ['loan_amnt’, 'funded_amnt’, 'term’, 'int_rate’, 'grade’, 'annual_inc’, 'issue_d’, 'dti’, 'revol_bal’, 'total_pymnt’, 'loan_status’]
       
@@ -19,16 +19,16 @@ Using Python 3.7
   - [ ] Describe the data.describe()
 
 - [ ] Describe any assumptions you made to handle null variables and outliers.
-    - [x] Remove outliers for Annual Income
-    - [x] Remove outliers for DTI
-    - [x] Total credit revolving balance (revol_bal)
+    - [ ] Remove outliers for Annual Income
+    - [ ] Remove outliers for DTI
+    - [ ] Total credit revolving balance (revol_bal)
 
 - [ ] Describe the distributions of the features.
     - [ ] Include two data visualizations and 
     - [ ] Two summary statistics to support these findings.
   
 # Part 2 Business Analysis
-- [x] Assume a 36 month investment period for each loan, and exclude loans with less than 36 months of data available.
+- [ ] Assume a 36 month investment period for each loan, and exclude loans with less than 36 months of data available.
 
 - [ ] What percentage of loans has been fully paid?
     * **0.7562866221941765**
