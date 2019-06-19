@@ -310,7 +310,7 @@ def logistic_regression(df):
         model.predict_proba(x_test)[:, 1],
     )
 
-    plt.rcParams['figure.figsize'] = [10, 5]
+    plt.rcParams['figure.figsize'] = [8, 8]
     plt.figure()
     plt.plot(
         fpr,
