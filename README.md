@@ -1,3 +1,7 @@
+## View the Notebook in nbviewer
+
+https://nbviewer.jupyter.org/github/nygeog/assignment/blob/master/report.ipynb
+
 # Dependencies
 
 Using Python 3.7
