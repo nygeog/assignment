@@ -301,6 +301,7 @@ def clean_prior_to_regression(df):
             'loan_status',  # this is dummy in 'default' col
             'max_date',  # removing, for filtering in part 2
             'issue_d',  # original date field, removed sim. to 'issue_date'
+            'total_pymnt',
         ],
         axis=1,
     )
